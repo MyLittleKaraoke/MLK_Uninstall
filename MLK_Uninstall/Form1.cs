@@ -54,7 +54,13 @@ namespace MLK_Uninstall
                 if (Directory.Exists(InstallFolderPath) == false)
                     InstallFolderPath = AppDomain.CurrentDomain.BaseDirectory;
 
-                
+                DialogResult dialogResult = MessageBox.Show("Confirm to delete all files in " + InstallFolderPath, "Confirm uninstalling ponies? - Singing is Magic", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning);
+                if (dialogResult != DialogResult.OK)
+                {
+                    MessageBox.Show("Please simply manually delete the files and especially the \"songs\" folder (contains most of the data).");
+                    Application.Exit();
+                    return;
+                }
                 try { Directory.Delete(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "SIM4toNew"), true); }
                 catch (Exception) { ;}
                 try { Directory.Delete(InstallFolderPath, true); }
