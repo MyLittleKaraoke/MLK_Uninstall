@@ -9,11 +9,7 @@ using System.Runtime.InteropServices;
 namespace MLK_Uninstall
 {
     class HelperClass
-    {
-        [DllImport("shell32.dll")]
-        static extern bool SHGetSpecialFolderPath(IntPtr hwndOwner, [Out] StringBuilder lpszPath, int nFolder, bool fCreate);
-        const int CSIDL_COMMON_STARTMENU = 0x16;  // All Users\Start Menu
-
+    {        
         public void ShowErrorMessageDialog(string sErrorBasic, string sErrorStacktrace, string sLocation)
         {
             MessageBox.Show("Derpy is awfully sorry, but this MyLittleKaraoke Installer just encountered an error.\n" +
@@ -78,9 +74,11 @@ namespace MLK_Uninstall
             return principal.IsInRole(WindowsBuiltInRole.Administrator);
         }
 
+        [DllImport("shell32.dll")]
+        static extern bool SHGetSpecialFolderPath(IntPtr hwndOwner, [Out] StringBuilder lpszPath, int nFolder, bool fCreate);
+        const int CSIDL_COMMON_STARTMENU = 0x16;  // All Users\Start Menu
         public void RemoveStartmenuShortcut()
         {
-
             try
             {
                 StringBuilder path = new StringBuilder(260);
