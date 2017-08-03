@@ -1,12 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
-using System.Net;
 using System.Diagnostics;
 using System.IO;
 
@@ -31,15 +24,16 @@ namespace MLK_Uninstall
                 if (cHelper.IsAdministrator() == false)
                 {
                     // Restart program and run as admin
-                    var exeName = System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName;
+                    var exeName = Process.GetCurrentProcess().MainModule.FileName;
                     ProcessStartInfo startInfo = new ProcessStartInfo(exeName);
                     startInfo.Verb = "runas";
-                    System.Diagnostics.Process.Start(startInfo);
+                    Process.Start(startInfo);
                     Application.Exit();
                     return;
                 }
+
                 String InstLocation = cHelper.GetInstallLocationfromRegistryKey();
-                if (InstLocation != null && InstLocation.Equals("") != true)
+                if (InstLocation != null && !InstLocation.Equals(""))
                 {
                     InstallFolderPath = InstLocation;
                 }
@@ -50,32 +44,43 @@ namespace MLK_Uninstall
                 else
                 {
                     InstallFolderPath = Path.Combine(Environment.GetEnvironmentVariable("ProgramFiles"), "MyLittleKaraoke");
-                };
+                }
+
                 if (Directory.Exists(InstallFolderPath) == false)
                     InstallFolderPath = AppDomain.CurrentDomain.BaseDirectory;
 
-                DialogResult dialogResult = MessageBox.Show("Confirm to delete all files in " + InstallFolderPath, "Confirm uninstalling ponies? - Singing is Magic", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning);
+                DialogResult dialogResult = MessageBox.Show("Confirm to delete all files in " + InstallFolderPath +".\nPlease note that this will also remove all of your installed songs."My Little Karaoke Uninstaller", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning);
                 if (dialogResult != DialogResult.OK)
                 {
-                    MessageBox.Show("Please simply manually delete the files and especially the \"songs\" folder (contains most of the data).");
+                    MessageBox.Show("Please simply manually delete the files and especially the \"songs\" folder (contains most of the data).", "My Little Karaoke Uninstaller");
                     Application.Exit();
                     return;
                 }
-                try { Directory.Delete(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "SIM4toNew"), true); }
-                catch (Exception) { ;}
-                try { Directory.Delete(InstallFolderPath, true); }
-                catch (Exception) { ;}
+
+                try
+                {
+                    Directory.Delete(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "SIM4toNew"), true);
+                }
+                catch (Exception ex)
+                { }
+
+                try
+                {
+                    Directory.Delete(InstallFolderPath, true);
+                }
+                catch (Exception ex)
+                { }
+
                 cHelper.SetInstallLocationInRegistryKey();
                 cHelper.RemoveStartmenuShortcut();
-                MessageBox.Show("Uninstalling MyLittleKaraoke - Singing is Magic finished successfully.");
+                MessageBox.Show("Uninstalling MyLittleKaraoke - Singing is Magic finished successfully.", "My Little Karaoke Uninstaller");
                 Application.Exit();
                 return;
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error during uninstall of MLK SIM: " + ex.Message + Environment.NewLine + Environment.NewLine + ex.StackTrace);
+                MessageBox.Show("Error during uninstall of MLK SIM: " + ex.Message + Environment.NewLine + Environment.NewLine + ex.StackTrace, "My Little Karaoke Uninstaller");
             }
-
         }
     }
 }
