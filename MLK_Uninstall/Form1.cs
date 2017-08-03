@@ -49,7 +49,7 @@ namespace MLK_Uninstall
                 if (Directory.Exists(InstallFolderPath) == false)
                     InstallFolderPath = AppDomain.CurrentDomain.BaseDirectory;
 
-                DialogResult dialogResult = MessageBox.Show("Confirm to delete all files in " + InstallFolderPath +".\nPlease note that this will also remove all of your installed songs."My Little Karaoke Uninstaller", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning);
+                DialogResult dialogResult = MessageBox.Show("Confirm to delete all files in " + InstallFolderPath +".\nPlease note that this will also remove all of your installed songs.", "My Little Karaoke Uninstaller", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning);
                 if (dialogResult != DialogResult.OK)
                 {
                     MessageBox.Show("Please simply manually delete the files and especially the \"songs\" folder (contains most of the data).", "My Little Karaoke Uninstaller");
